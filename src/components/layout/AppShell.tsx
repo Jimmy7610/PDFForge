@@ -18,9 +18,11 @@ export function AppShell() {
 
   return (
     <>
-      <div className="fixed top-6 right-6 z-[9999] hidden sm:block">
-        <LanguageSwitcher />
-      </div>
+      {files.length > 0 && (
+        <div className="fixed top-6 right-6 z-[9999] hidden sm:block">
+          <LanguageSwitcher />
+        </div>
+      )}
       {files.length === 0 ? (
         <LandingPage onOpenGuide={() => setIsGuideOpen(true)} />
       ) : (

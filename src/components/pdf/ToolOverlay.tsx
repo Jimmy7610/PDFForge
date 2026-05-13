@@ -157,7 +157,7 @@ export function ToolOverlay({ page, canvasWidth, canvasHeight, zoom }: ToolOverl
       {page.redactions.map((r, i) => (
         <div
           key={r.id}
-          className="absolute bg-black/90 border border-red-500/50 group"
+          className="absolute bg-black border border-red-500/50 group"
           style={{
             left: redactionRects[i].left,
             top: redactionRects[i].top,
@@ -214,7 +214,7 @@ export function ToolOverlay({ page, canvasWidth, canvasHeight, zoom }: ToolOverl
         <div
           className={`absolute pointer-events-none ${
             activeTool === 'redact'
-              ? 'bg-black/60 border-2 border-red-500'
+              ? 'bg-black border-2 border-red-500'
               : 'border-2 border-dashed border-warning-500 bg-warning-500/10'
           }`}
           style={{ left: drawLeft, top: drawTop, width: drawW, height: drawH }}

@@ -47,14 +47,23 @@ Use this checklist to verify all features work correctly.
 5. Click on the preview where you want the stamp
 6. **Expected:** Stamp text appears on the preview at the clicked position. Stamp appears in the stamp list. Stamp is rendered in the exported PDF.
 
-## 7. Add Redaction
+## 7. Add & Edit Redactions
 
 1. Select a page
 2. In the Smart Inspector, click "Redact" to enter redaction mode
-3. Click and drag on the preview to draw a black rectangle
-4. **Expected:** Black rectangle appears on the preview. Redaction appears in the redaction list. Redaction is rendered in the exported PDF.
-5. Hover over a redaction and click the × to delete it
-6. **Expected:** Redaction is removed.
+3. **Expected:** Cursor becomes a high-contrast crosshair with a target ring and "Drag to redact" label.
+4. Click and drag on the preview to draw a black rectangle
+5. **Expected:** Solid black rectangle with a primary color outline appears live while dragging.
+6. Click on a placed redaction
+7. **Expected:** Redaction shows a selection outline, resize handles at corners, and a "Redaction selected" label.
+8. Drag the body of a selected redaction
+9. **Expected:** Redaction moves smoothly following the mouse.
+10. Drag a corner handle of a selected redaction
+11. **Expected:** Redaction resizes accordingly.
+12. Press **Delete** or **Backspace** while a redaction is selected, or click "Delete selected redaction" in the sidebar.
+13. **Expected:** Redaction is removed.
+14. Export Normal and Secure Rasterized PDF
+15. **Expected:** Redactions are rendered as solid black in their final updated positions.
 
 ## 8. Crop Page
 

@@ -51,6 +51,7 @@ export const usePdfForgeStore = create<PdfForgeState>((set, get) => ({
   files: [],
   pages: [],
   selectedPageId: null,
+  selectedRedactionId: null,
   activeTool: 'none',
 
   // ── Export ──
@@ -108,6 +109,7 @@ export const usePdfForgeStore = create<PdfForgeState>((set, get) => ({
       files: [],
       pages: [],
       selectedPageId: null,
+      selectedRedactionId: null,
       activeTool: 'none',
       exportStatus: { ...defaultExportStatus },
       history: [],
@@ -133,9 +135,11 @@ export const usePdfForgeStore = create<PdfForgeState>((set, get) => ({
     s.reorderPages(index, destIndex);
   },
 
-  selectPage: (pageId: string | null) => set({ selectedPageId: pageId }),
+  selectPage: (pageId: string | null) => set({ selectedPageId: pageId, selectedRedactionId: null }),
 
-  setActiveTool: (tool: ActiveTool) => set({ activeTool: tool }),
+  setSelectedRedactionId: (id: string | null) => set({ selectedRedactionId: id }),
+
+  setActiveTool: (tool: ActiveTool) => set({ activeTool: tool, selectedRedactionId: null }),
 
   rotatePage: (pageId: string, direction: 'cw' | 'ccw') => {
     get().pushHistory();
@@ -163,6 +167,21 @@ export const usePdfForgeStore = create<PdfForgeState>((set, get) => ({
       pages: s.pages.map((p) =>
         p.id === pageId ? { ...p, redactions: [...p.redactions, redaction] } : p
       ),
+    }));
+  },
+
+  updateRedaction: (pageId: string, redactionId: string, patch: Partial<Omit<Redaction, 'id'>>) => {
+    get().pushHistory();
+    set((s) => ({
+      pages: s.pages.map((p) => {
+        if (p.id !== pageId) return p;
+        return {
+          ...p,
+          redactions: p.redactions.map((r) =>
+            r.id === redactionId ? { ...r, ...patch } : r
+          ),
+        };
+      }),
     }));
   },
 

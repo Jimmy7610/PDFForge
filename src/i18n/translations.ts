@@ -97,8 +97,14 @@ export const translations = {
       redact: {
         title: 'Redact',
         btn: 'Redact',
-        active: 'Drawing...',
+        active: 'Redaction active',
+        done: 'Done redacting',
+        drawing: 'Drawing...',
         desc: 'Click and drag on the preview to draw a redaction rectangle.',
+        helper: 'Drag to redact',
+        selected: 'Redaction selected',
+        editDesc: 'Drag to move. Use handles to resize. Press Delete to remove.',
+        deleteBtn: 'Delete selected redaction',
         warning: 'Normal redaction covers content visually. For truly sensitive documents, use Secure Rasterized Export.',
       },
       crop: {
@@ -316,8 +322,14 @@ export const translations = {
       redact: {
         title: 'Dölj',
         btn: 'Dölj innehåll',
-        active: 'Ritar...',
+        active: 'Maskering aktiv',
+        done: 'Klar med maskering',
+        drawing: 'Ritar...',
         desc: 'Klicka och dra på förhandsvisningen för att rita en röd rektangel.',
+        helper: 'Dra för att maskera',
+        selected: 'Maskering vald',
+        editDesc: 'Dra för att flytta. Använd handtagen för att ändra storlek. Tryck Delete för att ta bort.',
+        deleteBtn: 'Ta bort vald maskering',
         warning: 'Normal övermålning döljer bara innehållet visuellt. För riktigt känsliga dokument, använd säker bildbaserad export.',
       },
       crop: {

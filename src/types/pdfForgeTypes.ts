@@ -98,6 +98,7 @@ export interface PdfForgeState {
   files: PDFFileState[];
   pages: PDFPageState[];
   selectedPageId: string | null;
+  selectedRedactionId: string | null;
   activeTool: ActiveTool;
 
   // ── Export ──
@@ -127,12 +128,14 @@ export interface PdfForgeState {
   reorderPages: (sourceIndex: number, destinationIndex: number) => void;
   movePage: (pageId: string, direction: 'left' | 'right') => void;
   selectPage: (pageId: string | null) => void;
+  setSelectedRedactionId: (id: string | null) => void;
   setActiveTool: (tool: ActiveTool) => void;
   rotatePage: (pageId: string, direction: 'cw' | 'ccw') => void;
   toggleExclude: (pageId: string) => void;
 
   // Redactions
   addRedaction: (pageId: string, redaction: Redaction) => void;
+  updateRedaction: (pageId: string, redactionId: string, patch: Partial<Omit<Redaction, 'id'>>) => void;
   removeRedaction: (pageId: string, redactionId: string) => void;
 
   // Stamps

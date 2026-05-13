@@ -16,22 +16,19 @@ export function PageGallery() {
     const to = result.destination.index;
     if (from === to) return;
 
-    const reordered = [...pages];
-    const [moved] = reordered.splice(from, 1);
-    reordered.splice(to, 0, moved);
-    reorderPages(reordered);
+    reorderPages(from, to);
   }
 
   if (pages.length === 0) return null;
 
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
-      <Droppable droppableId="page-gallery" direction="horizontal">
+      <Droppable droppableId="pdf-pages" direction="horizontal">
         {(provided) => (
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className="flex flex-row gap-4 p-5 min-w-full w-fit"
+            className="flex flex-row items-start gap-4 p-5 min-w-max"
           >
             {pages.map((page, index) => (
               <Draggable key={page.id} draggableId={page.id} index={index}>
@@ -39,12 +36,15 @@ export function PageGallery() {
                   <div
                     ref={dragProvided.innerRef}
                     {...dragProvided.draggableProps}
-                    className={`w-[140px] transition-transform ${snapshot.isDragging ? 'z-50 scale-105' : ''}`}
+                    className={`shrink-0 w-[140px] select-none transition-all ${
+                      snapshot.isDragging ? 'z-50' : 'z-0'
+                    }`}
                   >
                     <PageThumbnail
                       page={page}
                       index={index}
-                      dragHandleProps={(dragProvided.dragHandleProps ?? undefined) as any}
+                      isDragging={snapshot.isDragging}
+                      dragHandleProps={dragProvided.dragHandleProps as any}
                     />
                   </div>
                 )}

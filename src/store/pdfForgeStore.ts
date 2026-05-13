@@ -116,9 +116,21 @@ export const usePdfForgeStore = create<PdfForgeState>((set, get) => ({
       ocrRunning: false,
     }),
 
-  reorderPages: (pages: PDFPageState[]) => {
+  reorderPages: (sourceIndex: number, destinationIndex: number) => {
     get().pushHistory();
+    const pages = [...get().pages];
+    const [moved] = pages.splice(sourceIndex, 1);
+    pages.splice(destinationIndex, 0, moved);
     set({ pages: pages.map((p, i) => ({ ...p, displayIndex: i })) });
+  },
+
+  movePage: (pageId: string, direction: 'left' | 'right') => {
+    const s = get();
+    const index = s.pages.findIndex((p) => p.id === pageId);
+    if (index === -1) return;
+    const destIndex = direction === 'left' ? index - 1 : index + 1;
+    if (destIndex < 0 || destIndex >= s.pages.length) return;
+    s.reorderPages(index, destIndex);
   },
 
   selectPage: (pageId: string | null) => set({ selectedPageId: pageId }),

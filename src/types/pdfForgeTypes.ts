@@ -124,7 +124,8 @@ export interface PdfForgeState {
   addFile: (file: PDFFileState, pages: PDFPageState[]) => void;
   removeFile: (fileId: string) => void;
   clearProject: () => void;
-  reorderPages: (pages: PDFPageState[]) => void;
+  reorderPages: (sourceIndex: number, destinationIndex: number) => void;
+  movePage: (pageId: string, direction: 'left' | 'right') => void;
   selectPage: (pageId: string | null) => void;
   setActiveTool: (tool: ActiveTool) => void;
   rotatePage: (pageId: string, direction: 'cw' | 'ccw') => void;

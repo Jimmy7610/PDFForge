@@ -75,7 +75,6 @@ export async function renderPageWithEdits(
   const pdfJsDoc = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0) }).promise;
   const page = await pdfJsDoc.getPage(pageState.sourcePageIndex + 1);
 
-  const baseViewport = page.getViewport({ scale: 1 });
   const scale = dpi / 72; // 72 PDF points per inch
   const viewport = page.getViewport({ scale, rotation: pageState.rotation });
 
@@ -97,10 +96,17 @@ export async function renderPageWithEdits(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await page.render({ canvasContext: fullCtx, viewport, canvas: fullCanvas } as any).promise;
 
-    // Map crop rect to rotated canvas coordinates
+    // Map crop rect to rotated canvas coordinates using pdfToCanvas
+    const { pixelX: sx, pixelY: sy } = pdfToCanvas(
+      crop.x, crop.y + crop.height,
+      viewport.width / scale, viewport.height / scale,
+      pageState.originalWidth, pageState.originalHeight,
+      scale,
+      null, // Get coords on full uncropped canvas
+      pageState.rotation
+    );
+
     const ctx = canvas.getContext('2d')!;
-    const sx = crop.x * scale;
-    const sy = (baseViewport.height - crop.y - crop.height) * scale;
     ctx.drawImage(fullCanvas, sx, sy, cropW, cropH, 0, 0, cropW, cropH);
   } else {
     canvas.width = viewport.width;

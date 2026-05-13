@@ -160,17 +160,37 @@ Use this checklist to verify all features work correctly.
 8. Press **Esc**.
 9. **Expected:** Placement mode cancels, cursor returns to normal.
 
-## 20. Stamp WYSIWYG Alignment
+## 20. Text Stamp Placement Precision
+
+1. Select a white PDF page.
+2. Enter stamp text: **DRAFT**
+3. Activate stamp placement.
+4. Move mouse over the page.
+5. **Expected:** Ghost "DRAFT" is centered exactly where the cursor/target is.
+6. Click to place stamps at:
+   - Top-left corner
+   - Center of the page
+   - Bottom-right corner
+7. **Expected:** Placed stamps appear exactly where the ghost preview was. No visual jump.
+8. Zoom to 150% and place a stamp.
+9. Scroll down a tall page and place a stamp.
+10. **Expected:** Both stamps are placed accurately at the click point.
+11. Export **Normal PDF**.
+12. **Expected:** All stamps in the exported PDF match the on-screen visual placement perfectly.
+13. Export **Secure Rasterized PDF**.
+14. **Expected:** All stamps in the rasterized PDF match the on-screen visual placement perfectly.
+
+## 21. Landing Page Empty States
+1. Clear everything (Test 13).
+2. **Expected:** App returns to the Premium Landing Page, not the empty workbench.
+
+## 22. Stamp WYSIWYG Alignment
 1. Activate stamp placement mode.
 2. **Expected:** Ghost preview text is centered exactly on the target crosshair.
 3. Click to place.
 4. **Expected:** No visual jump. The placed stamp appears in the exact same spot as the preview.
 5. Export a normal PDF.
 6. **Expected:** In the exported PDF, the stamp is centered on the same coordinate as shown on screen.
-
-## 21. Landing Page Empty States
-1. Clear everything (Test 13).
-2. **Expected:** App returns to the Premium Landing Page, not the empty workbench.
 
 ---
 

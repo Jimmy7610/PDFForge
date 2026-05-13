@@ -79,20 +79,32 @@ export async function exportNormalPdf(options: ExportOptions): Promise<Uint8Arra
     for (const stamp of pageState.stamps) {
       const { r, g, b } = hexToRgb(stamp.color);
       const textWidth = helvetica.widthOfTextAtSize(stamp.text, stamp.fontSize);
-      const visualCenterOffset = stamp.fontSize * 0.35;
+      // Helvetica cap-height is approximately 0.7 of font size.
+      // We center based on this for visual balance.
+      const textHeight = stamp.fontSize * 0.7;
 
-      // Adjust coordinates for crop origin (MediaBox shift)
-      const x = stamp.x - (crop?.x ?? 0);
-      const y = stamp.y - (crop?.y ?? 0);
+      // The rotation in pdf-lib drawText happens around the (x,y) origin (bottom-left).
+      // To center the text on (cx, cy) after a rotation of theta:
+      // x = cx - (w/2 * cos(theta) - h/2 * sin(theta))
+      // y = cy - (w/2 * sin(theta) + h/2 * cos(theta))
+      const theta = (-pageState.rotation * Math.PI) / 180;
+      const cos = Math.cos(theta);
+      const sin = Math.sin(theta);
+
+      const cx = stamp.x - (crop?.x ?? 0);
+      const cy = stamp.y - (crop?.y ?? 0);
+
+      const rx = (textWidth / 2) * cos - (textHeight / 2) * sin;
+      const ry = (textWidth / 2) * sin + (textHeight / 2) * cos;
 
       addedPage.drawText(stamp.text, {
-        x: x - textWidth / 2,
-        y: y - visualCenterOffset,
+        x: cx - rx,
+        y: cy - ry,
         size: stamp.fontSize,
         font: helvetica,
         color: rgb(r, g, b),
         opacity: stamp.opacity,
-        // Counter-rotate text so it stays horizontal on screen
+        // Counter-rotate text relative to the page rotation
         rotate: degrees(-pageState.rotation),
       });
     }

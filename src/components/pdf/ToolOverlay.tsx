@@ -391,12 +391,13 @@ export function ToolOverlay({ page, canvasWidth, canvasHeight, zoom }: ToolOverl
           {/* Ghost stamp text preview */}
           {activeTool === 'stamp' && stampText.trim() && (
             <div 
-              className="absolute whitespace-nowrap font-bold opacity-50"
+              className="absolute whitespace-nowrap font-bold"
               style={{ 
                 left: 0, 
-                top: -20,
+                top: 0,
                 transform: 'translate(-50%, -50%)',
                 color: stampColor,
+                opacity: stampOpacity,
                 fontSize: stampFontSize * zoom,
                 fontFamily: 'Helvetica, Arial, sans-serif'
               }}

@@ -9,3 +9,5 @@ export default defineConfig({
     include: ['pdfjs-dist'],
   },
 })
+
+// Trigger deployment workflow with corrected settings

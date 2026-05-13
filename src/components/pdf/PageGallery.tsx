@@ -31,20 +31,20 @@ export function PageGallery() {
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className="flex flex-wrap gap-3 p-4"
+            className="flex flex-row gap-4 p-5 min-w-full w-fit"
           >
             {pages.map((page, index) => (
               <Draggable key={page.id} draggableId={page.id} index={index}>
-                {(dragProvided) => (
+                {(dragProvided, snapshot) => (
                   <div
                     ref={dragProvided.innerRef}
                     {...dragProvided.draggableProps}
-                    className="w-[140px]"
+                    className={`w-[140px] transition-transform ${snapshot.isDragging ? 'z-50 scale-105' : ''}`}
                   >
                     <PageThumbnail
                       page={page}
                       index={index}
-                      dragHandleProps={(dragProvided.dragHandleProps ?? undefined) as unknown as Record<string, unknown> | undefined}
+                      dragHandleProps={(dragProvided.dragHandleProps ?? undefined) as any}
                     />
                   </div>
                 )}

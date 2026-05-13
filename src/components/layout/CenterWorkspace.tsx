@@ -25,9 +25,9 @@ export function CenterWorkspace() {
 
   return (
     <div className="flex flex-1 flex-col min-h-0 overflow-hidden">
-      {/* Page gallery */}
+      {/* Page gallery strip */}
       <div className="border-b border-surface-800 bg-surface-900/30">
-        <div className="max-h-[220px] overflow-y-auto">
+        <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-surface-700 scrollbar-track-transparent">
           <PageGallery />
         </div>
       </div>

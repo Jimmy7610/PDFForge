@@ -4,6 +4,7 @@
 
 import * as pdfjsLib from 'pdfjs-dist';
 import type { PDFPageState } from '../types/pdfForgeTypes';
+import { pdfToCanvas } from './pdfCoordinates';
 
 /**
  * Render a single page of a pdfjs document to a canvas data URL.
@@ -113,20 +114,39 @@ export async function renderPageWithEdits(
 
   // Draw redactions
   for (const r of pageState.redactions) {
-    const rx = (r.x - (crop?.x ?? 0)) * scale;
-    const ry = canvas.height - (r.y + r.height - (crop?.y ?? 0)) * scale;
+    // Get top-left of redaction in canvas pixels
+    const { pixelX: rx, pixelY: ry } = pdfToCanvas(
+      r.x, r.y + r.height,
+      canvas.width, canvas.height,
+      pageState.originalWidth, pageState.originalHeight,
+      1, // zoom=1 since canvas is already scaled
+      pageState.crop,
+      pageState.rotation
+    );
+
+    const rw = r.width * scale;
+    const rh = r.height * scale;
+
     ctx.fillStyle = '#000000';
-    ctx.fillRect(rx, ry, r.width * scale, r.height * scale);
+    ctx.fillRect(rx, ry, rw, rh);
   }
 
   // Draw stamps
   for (const s of pageState.stamps) {
-    const sx = (s.x - (crop?.x ?? 0)) * scale;
-    const sy = canvas.height - (s.y - (crop?.y ?? 0)) * scale;
+    // Stamps are centered, so get the click point
+    const { pixelX: sx, pixelY: sy } = pdfToCanvas(
+      s.x, s.y,
+      canvas.width, canvas.height,
+      pageState.originalWidth, pageState.originalHeight,
+      1,
+      pageState.crop,
+      pageState.rotation
+    );
+
     ctx.save();
     ctx.globalAlpha = s.opacity;
     ctx.fillStyle = s.color;
-    ctx.font = `${s.fontSize * scale}px Helvetica, Arial, sans-serif`;
+    ctx.font = `bold ${s.fontSize * scale}px Helvetica, Arial, sans-serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(s.text, sx, sy);

@@ -4,7 +4,7 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { Language } from './translations';
+import type { Language } from './translations';
 
 interface LanguageState {
   language: Language;

@@ -69,34 +69,43 @@ export async function exportNormalPdf(options: ExportOptions): Promise<Uint8Arra
     }
 
     // Apply crop
-    if (pageState.crop) {
-      const c = pageState.crop;
-      addedPage.setCropBox(c.x, c.y, c.width, c.height);
-      addedPage.setMediaBox(c.x, c.y, c.width, c.height);
+    const crop = pageState.crop;
+    if (crop) {
+      addedPage.setCropBox(crop.x, crop.y, crop.width, crop.height);
+      addedPage.setMediaBox(crop.x, crop.y, crop.width, crop.height);
     }
 
     // Apply text stamps
     for (const stamp of pageState.stamps) {
       const { r, g, b } = hexToRgb(stamp.color);
       const textWidth = helvetica.widthOfTextAtSize(stamp.text, stamp.fontSize);
-      // Centering adjustment: Helvetica visual center is approx 0.35 of font size above baseline
       const visualCenterOffset = stamp.fontSize * 0.35;
 
+      // Adjust coordinates for crop origin (MediaBox shift)
+      const x = stamp.x - (crop?.x ?? 0);
+      const y = stamp.y - (crop?.y ?? 0);
+
       addedPage.drawText(stamp.text, {
-        x: stamp.x - textWidth / 2,
-        y: stamp.y - visualCenterOffset,
+        x: x - textWidth / 2,
+        y: y - visualCenterOffset,
         size: stamp.fontSize,
         font: helvetica,
         color: rgb(r, g, b),
         opacity: stamp.opacity,
+        // Counter-rotate text so it stays horizontal on screen
+        rotate: degrees(-pageState.rotation),
       });
     }
 
     // Apply redaction rectangles (visual-only black boxes)
     for (const redaction of pageState.redactions) {
+      // Adjust coordinates for crop origin
+      const x = redaction.x - (crop?.x ?? 0);
+      const y = redaction.y - (crop?.y ?? 0);
+
       addedPage.drawRectangle({
-        x: redaction.x,
-        y: redaction.y,
+        x,
+        y,
         width: redaction.width,
         height: redaction.height,
         color: rgb(0, 0, 0),

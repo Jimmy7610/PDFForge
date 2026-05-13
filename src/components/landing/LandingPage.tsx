@@ -1,6 +1,6 @@
 import { UploadDropzone } from '../pdf/UploadDropzone';
 import { 
-  Layers, ShieldAlert, FileImage, ScanSearch, FileText, 
+  ShieldAlert, FileImage, ScanSearch, FileText, 
   CheckSquare, Crop, Trash2, Shield, Info, ArrowRight, User
 } from 'lucide-react';
 import { useTranslation } from '../../i18n/useTranslation';

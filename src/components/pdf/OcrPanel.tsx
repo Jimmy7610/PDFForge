@@ -1,14 +1,12 @@
-/* ───────────────────────────────────────────────────────────────
-   PDFForge – OcrPanel
-   ─────────────────────────────────────────────────────────────── */
-
 import { useState } from 'react';
 import { ScanText, Loader2, AlertCircle, Info } from 'lucide-react';
 import { usePdfForgeStore } from '../../store/pdfForgeStore';
 import { ocrPage } from '../../lib/pdfOcr';
 import { InfoTooltip } from '../ui/InfoTooltip';
+import { useTranslation } from '../../i18n/useTranslation';
 
 export function OcrPanel() {
+  const { t } = useTranslation();
   const selectedPageId = usePdfForgeStore((s) => s.selectedPageId);
   const pages = usePdfForgeStore((s) => s.pages);
   const files = usePdfForgeStore((s) => s.files);
@@ -42,7 +40,7 @@ export function OcrPanel() {
       );
       setOcrResults(page.id, items);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'OCR failed.');
+      setError(err instanceof Error ? err.message : t('inspector.ocr.desc'));
     }
 
     setOcrRunning(false);
@@ -84,12 +82,12 @@ export function OcrPanel() {
 
   return (
     <div className="space-y-3">
-      <h4 className="text-xs font-semibold uppercase tracking-wider text-surface-400">OCR — Text Recognition</h4>
+      <h4 className="text-xs font-semibold uppercase tracking-wider text-surface-400">{t('inspector.ocr.title')}</h4>
 
       {/* Language selector */}
       <div>
-        <InfoTooltip content="Choose the language used for text recognition." position="bottom" className="mb-1">
-          <label className="block text-[11px] text-surface-400 cursor-help w-fit">Language</label>
+        <InfoTooltip content={t('inspector.ocr.desc')} position="bottom" className="mb-1">
+          <label className="block text-[11px] text-surface-400 cursor-help w-fit">{t('inspector.ocr.lang')}</label>
         </InfoTooltip>
         <select
           value={ocrLanguage}
@@ -97,18 +95,18 @@ export function OcrPanel() {
           className="w-full rounded-lg border border-surface-600 bg-surface-800 px-2.5 py-1.5 text-xs text-surface-100 focus:border-primary-500 focus:outline-none"
           id="ocr-language-select"
         >
-          <option value="eng">English</option>
-          <option value="swe">Swedish</option>
-          <option value="eng+swe">English + Swedish</option>
-          <option value="fra">French</option>
-          <option value="deu">German</option>
-          <option value="spa">Spanish</option>
+          <option value="eng">{t('common.en')}</option>
+          <option value="swe">{t('common.sv')}</option>
+          <option value="eng+swe">{t('common.en')} + {t('common.sv')}</option>
+          <option value="fra">{t('common.fr')}</option>
+          <option value="deu">{t('common.de')}</option>
+          <option value="spa">{t('common.es')}</option>
         </select>
       </div>
 
       {/* Buttons */}
       <div className="flex gap-2">
-        <InfoTooltip content="Run OCR only on the selected page." className="flex-1 w-full">
+        <InfoTooltip content={t('inspector.ocr.scanPage')} className="flex-1 w-full">
           <button
             onClick={runOcrOnPage}
             disabled={ocrRunning || !selectedPageId}
@@ -116,10 +114,10 @@ export function OcrPanel() {
             id="ocr-page-btn"
           >
             {ocrRunning ? <Loader2 className="h-3 w-3 animate-spin" /> : <ScanText className="h-3 w-3" />}
-            Scan Page
+            {t('inspector.ocr.scanPage')}
           </button>
         </InfoTooltip>
-        <InfoTooltip content="Run OCR on all included pages." className="flex-1 w-full">
+        <InfoTooltip content={t('inspector.ocr.scanAll')} className="flex-1 w-full">
           <button
             onClick={runOcrOnAll}
             disabled={ocrRunning || pages.length === 0}
@@ -127,7 +125,7 @@ export function OcrPanel() {
             id="ocr-all-btn"
           >
             {ocrRunning ? <Loader2 className="h-3 w-3 animate-spin" /> : <ScanText className="h-3 w-3" />}
-            Scan All
+            {t('inspector.ocr.scanAll')}
           </button>
         </InfoTooltip>
       </div>
@@ -141,24 +139,24 @@ export function OcrPanel() {
               style={{ width: `${ocrProgress * 100}%` }}
             />
           </div>
-          <p className="text-[11px] text-surface-400">Recognizing text… {Math.round(ocrProgress * 100)}%</p>
+          <p className="text-[11px] text-surface-400">{t('inspector.ocr.running')} {Math.round(ocrProgress * 100)}%</p>
         </div>
       )}
 
       {/* Results */}
       {ocrItemCount > 0 && (
         <div className="rounded-lg bg-success-500/10 px-2.5 py-2 text-[11px] text-success-500">
-          {ocrItemCount} words detected on this page
+          {ocrItemCount} {t('inspector.ocr.title').toLowerCase()} detectat
         </div>
       )}
       {allOcrCount > 0 && (
-        <p className="text-[11px] text-surface-400">{allOcrCount} total words across all pages</p>
+        <p className="text-[11px] text-surface-400">{allOcrCount} total {t('inspector.ocr.title').toLowerCase()}</p>
       )}
 
       {ocrItemCount === 0 && allOcrCount === 0 && !ocrRunning && (
         <div className="flex items-start gap-2 rounded-lg bg-surface-800/80 p-2 text-[11px] text-surface-400">
           <Info className="mt-0.5 h-3 w-3 shrink-0" />
-          <span>Run OCR to detect text and optionally include a searchable text layer during export.</span>
+          <span>{t('inspector.ocr.desc')}</span>
         </div>
       )}
 
@@ -172,8 +170,9 @@ export function OcrPanel() {
 
       <div className="flex items-start gap-2 rounded-lg bg-surface-800/80 p-2 text-[11px] text-surface-400">
         <Info className="mt-0.5 h-3 w-3 shrink-0" />
-        <span>OCR is automatic and may contain mistakes. Always review important documents.</span>
+        <span>{t('inspector.ocr.desc')}</span>
       </div>
     </div>
   );
 }
+

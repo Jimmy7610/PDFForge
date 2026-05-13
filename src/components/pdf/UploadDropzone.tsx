@@ -9,8 +9,10 @@ import { loadPdfFile } from '../../lib/pdfLoader';
 import { usePdfForgeStore } from '../../store/pdfForgeStore';
 import { convertDocxToPdf, isDocxFile, isPdfFile } from '../../lib/docxImporter';
 import { InfoTooltip } from '../ui/InfoTooltip';
+import { useTranslation } from '../../i18n/useTranslation';
 
 export function UploadDropzone() {
+  const { t } = useTranslation();
   const addFile = usePdfForgeStore((s) => s.addFile);
   const [loading, setLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState<string>('');
@@ -23,18 +25,18 @@ export function UploadDropzone() {
 
       for (const file of acceptedFiles) {
         if (!isPdfFile(file) && !isDocxFile(file)) {
-          setError(`"${file.name}" is not a supported file type (PDF or DOCX).`);
+          setError(`"${file.name}" ${t('upload.errorInvalid')}`);
           continue;
         }
 
         // Warn for very large files
         if (file.size > 100 * 1024 * 1024) {
-          setError(`"${file.name}" is very large (${(file.size / 1024 / 1024).toFixed(0)} MB). Performance may be affected.`);
+          setError(t('upload.errorTooLarge', { name: file.name, size: (file.size / 1024 / 1024).toFixed(0) }));
         }
 
         try {
           if (isDocxFile(file)) {
-            setLoadingMessage('Initializing DOCX conversion…');
+            setLoadingMessage(t('upload.processing'));
             const result = await convertDocxToPdf(file, (msg) => setLoadingMessage(msg));
             
             // Create a new File from the generated PDF array buffer
@@ -42,7 +44,7 @@ export function UploadDropzone() {
               type: 'application/pdf',
             });
             
-            setLoadingMessage('Loading converted PDF…');
+            setLoadingMessage(t('upload.processing'));
             const { fileState, pageStates } = await loadPdfFile(convertedFile);
             addFile(fileState, pageStates);
 
@@ -50,12 +52,12 @@ export function UploadDropzone() {
               console.warn('DOCX Conversion Warnings:', result.warnings);
             }
           } else {
-            setLoadingMessage('Loading PDF…');
+            setLoadingMessage(t('upload.processing'));
             const { fileState, pageStates } = await loadPdfFile(file);
             addFile(fileState, pageStates);
           }
         } catch (err) {
-          const msg = err instanceof Error ? err.message : 'Unknown error loading file.';
+          const msg = err instanceof Error ? err.message : t('common.error');
           setError(msg);
         }
       }
@@ -63,7 +65,7 @@ export function UploadDropzone() {
       setLoading(false);
       setLoadingMessage('');
     },
-    [addFile],
+    [addFile, t],
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -77,7 +79,7 @@ export function UploadDropzone() {
 
   return (
     <div className="px-3 pb-3">
-      <InfoTooltip content="Upload one or more PDF files, or import DOCX files and convert them locally." position="bottom" className="w-full">
+      <InfoTooltip content={t('upload.dragDrop')} position="bottom" className="w-full">
         <div
           {...getRootProps()}
           className={`group/drop relative cursor-pointer w-full rounded-xl border-2 border-dashed p-4 text-center transition-all duration-200 ${
@@ -91,24 +93,24 @@ export function UploadDropzone() {
           {loading ? (
             <div className="flex flex-col items-center gap-2 py-2">
               <Loader2 className="h-8 w-8 animate-spin text-primary-400" />
-              <p className="text-sm text-surface-300">{loadingMessage || 'Loading…'}</p>
+              <p className="text-sm text-surface-300">{loadingMessage || t('common.loading')}</p>
             </div>
           ) : (
             <div className="flex flex-col items-center gap-2 py-2">
               <Upload className={`h-8 w-8 transition-colors ${isDragActive ? 'text-primary-400' : 'text-surface-400 group-hover/drop:text-primary-400'}`} />
               <p className="text-sm font-medium text-surface-200">
-                {isDragActive ? 'Drop files here' : 'Upload PDF or DOCX'}
+                {isDragActive ? t('upload.dragDrop') : t('upload.title')}
               </p>
-              <p className="text-xs text-surface-400">Drag & drop or click to browse</p>
+              <p className="text-xs text-surface-400">{t('upload.browse')}</p>
             </div>
           )}
         </div>
       </InfoTooltip>
 
-      <InfoTooltip content="DOCX conversion works best for simple Word documents. Complex layouts may differ." position="bottom" className="mt-2 w-full">
+      <InfoTooltip content={t('upload.docxWarning')} position="bottom" className="mt-2 w-full">
         <div className="flex items-start gap-2 rounded-lg bg-surface-800/80 p-2 text-[11px] text-surface-400 cursor-help">
           <Info className="mt-0.5 h-3 w-3 shrink-0" />
-          <span>DOCX conversion is local and works best for simple documents. Complex Word layouts, headers, footers, tables and page breaks may not match Microsoft Word perfectly.</span>
+          <span>{t('upload.docxWarning')}</span>
         </div>
       </InfoTooltip>
 

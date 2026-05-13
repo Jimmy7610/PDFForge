@@ -3,21 +3,25 @@ import {
   Layers, ShieldAlert, FileImage, ScanSearch, FileText, 
   CheckSquare, Crop, Trash2, Shield, Info, ArrowRight, User
 } from 'lucide-react';
+import { useTranslation } from '../../i18n/useTranslation';
+import { LanguageSwitcher } from '../ui/LanguageSwitcher';
 
 interface LandingPageProps {
   onOpenGuide: () => void;
 }
 
 export function LandingPage({ onOpenGuide }: LandingPageProps) {
+  const { t } = useTranslation();
+
   const features = [
-    { title: 'Merge', desc: 'Combine multiple PDFs into a single file.', icon: Layers },
-    { title: 'Redact', desc: 'Permanently black out sensitive info.', icon: ShieldAlert },
-    { title: 'Rasterize', desc: 'Flatten pages into images for security.', icon: FileImage },
-    { title: 'OCR', desc: 'Detect and layer searchable text.', icon: ScanSearch },
-    { title: 'DOCX', desc: 'Convert Word docs locally in browser.', icon: FileText },
-    { title: 'Forms', desc: 'Edit and flatten interactive fields.', icon: CheckSquare },
-    { title: 'Crop', desc: 'Adjust page dimensions with precision.', icon: Crop },
-    { title: 'Metadata', desc: 'Scrub author and document history.', icon: Trash2 },
+    { title: t('inspector.redact.title'), desc: t('landing.features.redact.desc'), icon: ShieldAlert },
+    { title: t('sidebar.rasterizedExport'), desc: t('guide.export.raster'), icon: FileImage },
+    { title: t('inspector.ocr.title'), desc: t('landing.features.ocr.desc'), icon: ScanSearch },
+    { title: 'DOCX', desc: t('landing.features.docx.desc'), icon: FileText },
+    { title: t('sidebar.options'), desc: t('landing.features.private.desc'), icon: CheckSquare },
+    { title: t('inspector.crop.title'), desc: t('inspector.crop.desc'), icon: Crop },
+    { title: 'Metadata', desc: t('sidebar.metadataNote'), icon: Trash2 },
+    { title: t('landing.features.private.title'), desc: t('landing.features.private.desc'), icon: Shield },
   ];
 
   return (
@@ -35,16 +39,19 @@ export function LandingPage({ onOpenGuide }: LandingPageProps) {
             </div>
             <div>
               <h1 className="text-xl font-bold tracking-tight text-white">PDFForge</h1>
-              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-surface-500">Professional Workbench</p>
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-surface-500">{t('common.credits')}</p>
             </div>
           </div>
-          <button 
-            onClick={onOpenGuide}
-            className="group flex items-center gap-2.5 rounded-xl border border-surface-800 bg-surface-900/40 px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-surface-400 transition-all hover:bg-surface-800 hover:text-white hover:border-surface-700 w-full sm:w-auto justify-center"
-          >
-            <Info className="h-4 w-4 transition-transform group-hover:rotate-12" />
-            Learn how it works
-          </button>
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <LanguageSwitcher />
+            <button 
+              onClick={onOpenGuide}
+              className="group flex flex-1 sm:flex-initial items-center gap-2.5 rounded-xl border border-surface-800 bg-surface-900/40 px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-surface-400 transition-all hover:bg-surface-800 hover:text-white hover:border-surface-700 justify-center"
+            >
+              <Info className="h-4 w-4 transition-transform group-hover:rotate-12" />
+              {t('landing.howItWorks')}
+            </button>
+          </div>
         </header>
 
         {/* Workspace Layout */}
@@ -58,18 +65,18 @@ export function LandingPage({ onOpenGuide }: LandingPageProps) {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-primary-500"></span>
                 </span>
-                Client-Side Processing Enabled
+                {t('landing.tagline')}
               </div>
               <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight text-white">
-                Private PDF Workbench.<br />
-                <span className="text-surface-500">Built for secure work.</span>
+                {t('landing.heroTitle').split('.')[0]}.<br />
+                <span className="text-surface-500">{t('landing.heroTitle').split('.')[1] || ''}</span>
               </h2>
               <p className="text-base sm:text-lg text-surface-400 leading-relaxed max-w-xl">
-                PDFForge provides a clean, local workspace for merging, editing, redacting, and OCR scanning PDF documents — directly in your browser, with privacy at its core.
+                {t('landing.heroSubtitle')}
               </p>
               <div className="flex items-center gap-3 text-xs font-medium text-surface-500 italic">
                 <User className="h-3.5 w-3.5" />
-                Designed and built by Jimmy Eliasson
+                {t('common.builtBy')}
               </div>
             </div>
 
@@ -79,23 +86,23 @@ export function LandingPage({ onOpenGuide }: LandingPageProps) {
                 <Shield className="h-40 w-40" />
               </div>
               <div className="relative z-10 space-y-6">
-                <h3 className="text-xs font-black uppercase tracking-[0.2em] text-primary-500">Privacy Safeguards</h3>
+                <h3 className="text-xs font-black uppercase tracking-[0.2em] text-primary-500">{t('guide.sections.limitations.title')}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                   <div className="space-y-1">
-                    <h4 className="text-sm font-bold text-surface-200">Zero Server Uploads</h4>
-                    <p className="text-xs text-surface-500 leading-relaxed">Processing is 100% local. Your sensitive files never leave your machine.</p>
+                    <h4 className="text-sm font-bold text-surface-200">{t('landing.features.private.title')}</h4>
+                    <p className="text-xs text-surface-500 leading-relaxed">{t('landing.features.private.desc')}</p>
                   </div>
                   <div className="space-y-1">
-                    <h4 className="text-sm font-bold text-surface-200">Secure Image Export</h4>
-                    <p className="text-xs text-surface-500 leading-relaxed">Flatten pages into high-res images to permanently destroy hidden data.</p>
+                    <h4 className="text-sm font-bold text-surface-200">{t('sidebar.rasterizedExport')}</h4>
+                    <p className="text-xs text-surface-500 leading-relaxed">{t('guide.sections.export.raster.title')}</p>
                   </div>
                   <div className="space-y-1">
-                    <h4 className="text-sm font-bold text-surface-200">Metadata Scrubbing</h4>
-                    <p className="text-xs text-surface-500 leading-relaxed">Automatic removal of original document properties and history.</p>
+                    <h4 className="text-sm font-bold text-surface-200">{t('sidebar.metadataNote')}</h4>
+                    <p className="text-xs text-surface-500 leading-relaxed">{t('sidebar.metadataNote')}</p>
                   </div>
                   <div className="space-y-1">
-                    <h4 className="text-sm font-bold text-surface-200">Local DOCX Engine</h4>
-                    <p className="text-xs text-surface-500 leading-relaxed">Convert Word documents safely without external API dependencies.</p>
+                    <h4 className="text-sm font-bold text-surface-200">{t('landing.features.docx.title')}</h4>
+                    <p className="text-xs text-surface-500 leading-relaxed">{t('landing.features.docx.desc')}</p>
                   </div>
                 </div>
               </div>
@@ -104,10 +111,10 @@ export function LandingPage({ onOpenGuide }: LandingPageProps) {
             {/* Micro Workflow */}
             <div className="flex flex-wrap items-center gap-6 sm:gap-10">
               {[
-                { s: '01', t: 'Upload' },
-                { s: '02', t: 'Organize' },
-                { s: '03', t: 'Refine' },
-                { s: '04', t: 'Finalize' },
+                { s: '01', t: t('landing.steps.step1') },
+                { s: '02', t: t('landing.steps.step2') },
+                { s: '03', t: t('landing.steps.step3') },
+                { s: '04', t: t('common.done') },
               ].map((item, i) => (
                 <div key={item.s} className="flex items-center gap-4">
                   <div className="flex flex-col">
@@ -129,13 +136,13 @@ export function LandingPage({ onOpenGuide }: LandingPageProps) {
                     <UploadDropzone />
                  </div>
               </div>
-              <p className="mt-4 text-[10px] text-surface-600 font-medium uppercase tracking-[0.1em]">Supported: PDF & Microsoft Word (DOCX)</p>
+              <p className="mt-4 text-[10px] text-surface-600 font-medium uppercase tracking-[0.1em]">{t('upload.docxWarning')}</p>
             </div>
 
             {/* Feature Mosaic */}
             <div className="w-full">
               <div className="flex items-center gap-4 mb-6">
-                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-surface-600">Core Capabilities</h3>
+                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-surface-600">{t('sidebar.options')}</h3>
                 <div className="h-px flex-1 bg-surface-800/50" />
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
@@ -164,7 +171,7 @@ export function LandingPage({ onOpenGuide }: LandingPageProps) {
           <div className="flex flex-wrap items-center justify-center gap-4">
             <span className="text-surface-400 text-center">PDFForge v1.0.4 Premium</span>
             <span className="h-3 w-px bg-surface-800 hidden sm:block" />
-            <span className="hover:text-surface-400 transition-colors cursor-default text-center">Built by Jimmy Eliasson</span>
+            <span className="hover:text-surface-400 transition-colors cursor-default text-center">{t('common.builtBy')}</span>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4">
             <span className="hover:text-surface-400 transition-colors cursor-default">Client-Side Engine</span>
@@ -176,3 +183,5 @@ export function LandingPage({ onOpenGuide }: LandingPageProps) {
     </div>
   );
 }
+
+

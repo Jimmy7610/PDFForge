@@ -1,11 +1,9 @@
-/* ───────────────────────────────────────────────────────────────
-   PDFForge – FormFieldEditor
-   ─────────────────────────────────────────────────────────────── */
-
 import { FileInput, Info } from 'lucide-react';
 import { usePdfForgeStore } from '../../store/pdfForgeStore';
+import { useTranslation } from '../../i18n/useTranslation';
 
 export function FormFieldEditor() {
+  const { t } = useTranslation();
   const selectedPageId = usePdfForgeStore((s) => s.selectedPageId);
   const pages = usePdfForgeStore((s) => s.pages);
   const files = usePdfForgeStore((s) => s.files);
@@ -21,17 +19,17 @@ export function FormFieldEditor() {
     <div className="space-y-3">
       <div className="flex items-center gap-2">
         <FileInput className="h-3.5 w-3.5 text-surface-400" />
-        <h4 className="text-xs font-semibold uppercase tracking-wider text-surface-400">Form Fields</h4>
+        <h4 className="text-xs font-semibold uppercase tracking-wider text-surface-400">{t('inspector.forms.title')}</h4>
       </div>
 
       {fields.length === 0 ? (
         <div className="flex items-start gap-2 rounded-lg bg-surface-800/80 p-2 text-[11px] text-surface-400">
           <Info className="mt-0.5 h-3 w-3 shrink-0" />
-          <span>No editable form fields were detected in this PDF.</span>
+          <span>{t('inspector.forms.empty')}</span>
         </div>
       ) : (
         <div className="space-y-2">
-          <p className="text-[11px] text-surface-400">{fields.length} field{fields.length !== 1 ? 's' : ''} detected</p>
+          <p className="text-[11px] text-surface-400">{fields.length} {t('inspector.forms.title').toLowerCase()}</p>
 
           {fields.map((field) => (
             <div key={field.name} className="rounded-lg bg-surface-800/60 px-2.5 py-2">
@@ -48,7 +46,7 @@ export function FormFieldEditor() {
                   value={typeof field.value === 'string' ? field.value : ''}
                   onChange={(e) => setFormFieldValue(file.id, field.name, e.target.value)}
                   className="w-full rounded border border-surface-600 bg-surface-900 px-2 py-1 text-xs text-surface-100 placeholder-surface-500 focus:border-primary-500 focus:outline-none"
-                  placeholder="Enter value…"
+                  placeholder={t('inspector.stamp.placeholder')}
                 />
               )}
 
@@ -60,7 +58,9 @@ export function FormFieldEditor() {
                     onChange={(e) => setFormFieldValue(file.id, field.name, e.target.checked)}
                     className="rounded border-surface-600 bg-surface-900 text-primary-500"
                   />
-                  <span className="text-[11px] text-surface-300">{field.value ? 'Checked' : 'Unchecked'}</span>
+                  <span className="text-[11px] text-surface-300">
+                    {field.value ? t('workspace.included') : t('workspace.excluded')}
+                  </span>
                 </label>
               )}
 
@@ -70,7 +70,7 @@ export function FormFieldEditor() {
                   onChange={(e) => setFormFieldValue(file.id, field.name, e.target.value)}
                   className="w-full rounded border border-surface-600 bg-surface-900 px-2 py-1 text-xs text-surface-100 focus:border-primary-500 focus:outline-none"
                 >
-                  <option value="">Select…</option>
+                  <option value="">{t('common.browse')}…</option>
                   {field.options.map((opt) => (
                     <option key={opt} value={opt}>{opt}</option>
                   ))}
@@ -83,3 +83,4 @@ export function FormFieldEditor() {
     </div>
   );
 }
+

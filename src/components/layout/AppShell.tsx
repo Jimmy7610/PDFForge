@@ -10,12 +10,17 @@ import { usePdfForgeStore } from '../../store/pdfForgeStore';
 import { LandingPage } from '../landing/LandingPage';
 import { PDFForgeGuideModal } from '../help/PDFForgeGuideModal';
 
+import { LanguageSwitcher } from '../ui/LanguageSwitcher';
+
 export function AppShell() {
   const files = usePdfForgeStore((s) => s.files);
   const [isGuideOpen, setIsGuideOpen] = useState(false);
 
   return (
     <>
+      <div className="fixed top-6 right-6 z-[9999] hidden sm:block">
+        <LanguageSwitcher />
+      </div>
       {files.length === 0 ? (
         <LandingPage onOpenGuide={() => setIsGuideOpen(true)} />
       ) : (

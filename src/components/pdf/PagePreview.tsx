@@ -1,15 +1,13 @@
-/* ───────────────────────────────────────────────────────────────
-   PDFForge – PagePreview (large selected page preview)
-   ─────────────────────────────────────────────────────────────── */
-
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
 import { usePdfForgeStore } from '../../store/pdfForgeStore';
 import { renderPageToCanvas } from '../../lib/pdfRenderer';
 import { ToolOverlay } from './ToolOverlay';
 import { InfoTooltip } from '../ui/InfoTooltip';
+import { useTranslation } from '../../i18n/useTranslation';
 
 export function PagePreview() {
+  const { t } = useTranslation();
   const selectedPageId = usePdfForgeStore((s) => s.selectedPageId);
   const pages = usePdfForgeStore((s) => s.pages);
   const files = usePdfForgeStore((s) => s.files);
@@ -69,7 +67,7 @@ export function PagePreview() {
   if (!page || !file) {
     return (
       <div className="flex flex-1 items-center justify-center text-surface-500">
-        <p className="text-sm">Select a page to preview</p>
+        <p className="text-sm">{t('workspace.empty')}</p>
       </div>
     );
   }
@@ -78,7 +76,7 @@ export function PagePreview() {
     <div ref={containerRef} className="flex flex-1 flex-col min-h-0 overflow-hidden">
       {/* Zoom toolbar */}
       <div className="flex items-center justify-center gap-2 border-b border-surface-800 bg-surface-900/50 px-4 py-2 shrink-0">
-        <InfoTooltip content="Adjust the preview size for more precise editing." position="bottom">
+        <InfoTooltip content={t('workspace.zoom')} position="bottom">
           <button
             onClick={() => setZoom((z) => Math.max(z - 0.2, 0.2))}
             className="rounded-lg p-1.5 text-surface-400 hover:bg-surface-800 hover:text-surface-200 transition-colors cursor-help"
@@ -90,7 +88,7 @@ export function PagePreview() {
         <span className="min-w-[4rem] text-center text-xs font-medium text-surface-300">
           {Math.round(zoom * 100)}%
         </span>
-        <InfoTooltip content="Adjust the preview size for more precise editing." position="bottom">
+        <InfoTooltip content={t('workspace.zoom')} position="bottom">
           <button
             onClick={() => setZoom((z) => Math.min(z + 0.2, 3))}
             className="rounded-lg p-1.5 text-surface-400 hover:bg-surface-800 hover:text-surface-200 transition-colors cursor-help"
@@ -99,7 +97,7 @@ export function PagePreview() {
             <ZoomIn className="h-4 w-4" />
           </button>
         </InfoTooltip>
-        <InfoTooltip content="Adjust the preview size for more precise editing." position="bottom">
+        <InfoTooltip content={t('workspace.zoom')} position="bottom">
           <button
             onClick={fitToWidth}
             className="rounded-lg p-1.5 text-surface-400 hover:bg-surface-800 hover:text-surface-200 transition-colors cursor-help"
@@ -114,7 +112,7 @@ export function PagePreview() {
       </div>
 
       {/* Canvas area with scrollable viewport */}
-      <InfoTooltip content="Use this large preview to place stamps, draw crops or mark redactions." position="bottom" className="flex-1 min-h-0 w-full flex flex-col">
+      <InfoTooltip content={t('guide.workspace.preview')} position="bottom" className="flex-1 min-h-0 w-full flex flex-col">
         <div className="flex-1 overflow-auto bg-surface-950 scrollbar-thin scrollbar-thumb-surface-700 scrollbar-track-transparent">
           <div className="flex min-h-full min-w-full p-8 sm:p-12">
             <div
@@ -153,4 +151,5 @@ export function PagePreview() {
     </div>
   );
 }
+
 

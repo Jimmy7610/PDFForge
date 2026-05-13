@@ -1,7 +1,3 @@
-/* ───────────────────────────────────────────────────────────────
-   PDFForge – Right Inspector sidebar
-   ─────────────────────────────────────────────────────────────── */
-
 import { usePdfForgeStore } from '../../store/pdfForgeStore';
 import { RedactionPanel } from '../pdf/RedactionPanel';
 import { CropPanel } from '../pdf/CropPanel';
@@ -10,8 +6,10 @@ import { OcrPanel } from '../pdf/OcrPanel';
 import { FormFieldEditor } from '../pdf/FormFieldEditor';
 import { RotateCw, RotateCcw, Eye, EyeOff, Info } from 'lucide-react';
 import { InfoTooltip } from '../ui/InfoTooltip';
+import { useTranslation } from '../../i18n/useTranslation';
 
 export function RightInspector() {
+  const { t } = useTranslation();
   const selectedPageId = usePdfForgeStore((s) => s.selectedPageId);
   const pages = usePdfForgeStore((s) => s.pages);
   const files = usePdfForgeStore((s) => s.files);
@@ -25,8 +23,8 @@ export function RightInspector() {
     <div className="flex h-full flex-col">
       {/* Header */}
       <div className="border-b border-surface-800 px-4 py-3">
-        <InfoTooltip content="Tools and settings for the currently selected page." position="bottom">
-          <h2 className="text-sm font-semibold text-surface-200 cursor-help w-fit">Smart Inspector</h2>
+        <InfoTooltip content={t('inspector.title')} position="bottom">
+          <h2 className="text-sm font-semibold text-surface-200 cursor-help w-fit">{t('inspector.title')}</h2>
         </InfoTooltip>
       </div>
 
@@ -37,44 +35,44 @@ export function RightInspector() {
             <div className="rounded-full bg-surface-800/50 p-4">
               <Info className="h-8 w-8 text-surface-400" />
             </div>
-            <p className="text-sm font-medium text-surface-300">Select a page to preview and edit it.</p>
+            <p className="text-sm font-medium text-surface-300">{t('workspace.empty')}</p>
             <p className="max-w-[200px] text-xs leading-relaxed text-surface-500">
-              Click on any page in the center workspace to view its details and access editing tools.
+              {t('workspace.emptySub')}
             </p>
           </div>
         ) : (
           <div className="space-y-5">
             {/* Page info */}
             <div className="rounded-xl bg-surface-800/60 p-3 space-y-2">
-              <InfoTooltip content="Shows information about the selected page." position="bottom">
-                <h4 className="text-xs font-semibold uppercase tracking-wider text-surface-400 cursor-help w-fit">Page Info</h4>
+              <InfoTooltip content={t('inspector.pageInfo')} position="bottom">
+                <h4 className="text-xs font-semibold uppercase tracking-wider text-surface-400 cursor-help w-fit">{t('inspector.pageInfo')}</h4>
               </InfoTooltip>
               <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-[11px]">
-                <InfoTooltip content="The original file this page came from." position="left" className="col-span-1">
-                  <span className="text-surface-500 cursor-help flex w-full">Source</span>
+                <InfoTooltip content={t('inspector.source')} position="left" className="col-span-1">
+                  <span className="text-surface-500 cursor-help flex w-full">{t('inspector.source')}</span>
                 </InfoTooltip>
                 <span className="truncate text-surface-200">{file?.originalName}</span>
                 
-                <InfoTooltip content="The original page number and total pages." position="left" className="col-span-1">
-                  <span className="text-surface-500 cursor-help flex w-full">Page</span>
+                <InfoTooltip content={t('inspector.page')} position="left" className="col-span-1">
+                  <span className="text-surface-500 cursor-help flex w-full">{t('inspector.page')}</span>
                 </InfoTooltip>
                 <span className="text-surface-200">{page.sourcePageIndex + 1} of {file?.pageCount}</span>
                 
-                <InfoTooltip content="The PDF page size in points." position="left" className="col-span-1">
-                  <span className="text-surface-500 cursor-help flex w-full">Size</span>
+                <InfoTooltip content={t('inspector.size')} position="left" className="col-span-1">
+                  <span className="text-surface-500 cursor-help flex w-full">{t('inspector.size')}</span>
                 </InfoTooltip>
                 <span className="text-surface-200">{page.originalWidth.toFixed(0)} × {page.originalHeight.toFixed(0)} pt</span>
                 
-                <InfoTooltip content="Rotate the selected page before export." position="left" className="col-span-1">
-                  <span className="text-surface-500 cursor-help flex w-full">Rotation</span>
+                <InfoTooltip content={t('inspector.rotation')} position="left" className="col-span-1">
+                  <span className="text-surface-500 cursor-help flex w-full">{t('inspector.rotation')}</span>
                 </InfoTooltip>
                 <span className="text-surface-200">{page.rotation}°</span>
                 
-                <InfoTooltip content="Excluded pages stay visible but are not exported." position="left" className="col-span-1">
-                  <span className="text-surface-500 cursor-help flex w-full">Status</span>
+                <InfoTooltip content={t('inspector.status')} position="left" className="col-span-1">
+                  <span className="text-surface-500 cursor-help flex w-full">{t('inspector.status')}</span>
                 </InfoTooltip>
                 <span className={page.excluded ? 'text-warning-500' : 'text-success-500'}>
-                  {page.excluded ? 'Excluded' : 'Included'}
+                  {page.excluded ? t('workspace.excluded') : t('workspace.included')}
                 </span>
               </div>
 
@@ -104,7 +102,7 @@ export function RightInspector() {
                   }`}
                 >
                   {page.excluded ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
-                  {page.excluded ? 'Excluded' : 'Included'}
+                  {page.excluded ? t('workspace.excluded') : t('workspace.included')}
                 </button>
               </div>
             </div>
@@ -130,3 +128,4 @@ export function RightInspector() {
     </div>
   );
 }
+

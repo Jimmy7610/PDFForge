@@ -1,13 +1,11 @@
-/* ───────────────────────────────────────────────────────────────
-   PDFForge – CenterWorkspace
-   ─────────────────────────────────────────────────────────────── */
-
 import { usePdfForgeStore } from '../../store/pdfForgeStore';
 import { PageGallery } from '../pdf/PageGallery';
 import { PagePreview } from '../pdf/PagePreview';
 import { FileText, Info } from 'lucide-react';
+import { useTranslation } from '../../i18n/useTranslation';
 
 export function CenterWorkspace() {
+  const { t } = useTranslation();
   const pages = usePdfForgeStore((s) => s.pages);
   const selectedPageId = usePdfForgeStore((s) => s.selectedPageId);
 
@@ -18,8 +16,8 @@ export function CenterWorkspace() {
           <FileText className="h-16 w-16 text-surface-600" />
         </div>
         <div className="text-center">
-          <p className="text-lg font-semibold text-surface-300">No PDFs uploaded</p>
-          <p className="mt-1 text-sm text-surface-500">Upload PDF files to get started</p>
+          <p className="text-lg font-semibold text-surface-300">{t('workspace.empty')}</p>
+          <p className="mt-1 text-sm text-surface-500">{t('workspace.emptySub')}</p>
         </div>
       </div>
     );
@@ -42,9 +40,10 @@ export function CenterWorkspace() {
           <div className="rounded-full bg-surface-800/30 p-4">
             <Info className="h-8 w-8 text-surface-600" />
           </div>
-          <p className="text-sm font-medium text-surface-300">Select a page to preview and edit it.</p>
+          <p className="text-sm font-medium text-surface-300">{t('workspace.empty')}</p>
         </div>
       )}
     </div>
   );
 }
+

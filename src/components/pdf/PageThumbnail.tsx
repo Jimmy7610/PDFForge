@@ -1,12 +1,9 @@
-/* ───────────────────────────────────────────────────────────────
-   PDFForge – PageThumbnail
-   ─────────────────────────────────────────────────────────────── */
-
 import { memo } from 'react';
 import { RotateCw, RotateCcw, Eye, EyeOff, GripVertical } from 'lucide-react';
 import { usePdfForgeStore } from '../../store/pdfForgeStore';
 import type { PDFPageState } from '../../types/pdfForgeTypes';
 import { InfoTooltip } from '../ui/InfoTooltip';
+import { useTranslation } from '../../i18n/useTranslation';
 
 interface PageThumbnailProps {
   page: PDFPageState;
@@ -19,6 +16,7 @@ export const PageThumbnail = memo(function PageThumbnail({
   index,
   dragHandleProps,
 }: PageThumbnailProps) {
+  const { t } = useTranslation();
   const selectPage = usePdfForgeStore((s) => s.selectPage);
   const selectedPageId = usePdfForgeStore((s) => s.selectedPageId);
   const rotatePage = usePdfForgeStore((s) => s.rotatePage);
@@ -50,7 +48,7 @@ export const PageThumbnail = memo(function PageThumbnail({
       </div>
 
       {/* Thumbnail */}
-      <InfoTooltip content="Click to select. Drag to reorder." position="top" className="w-full">
+      <InfoTooltip content={t('workspace.empty')} position="top" className="w-full">
         <button
           onClick={() => selectPage(page.id)}
           className="relative flex aspect-[3/4] w-full items-center justify-center overflow-hidden rounded-t-[10px] bg-surface-900"
@@ -59,13 +57,13 @@ export const PageThumbnail = memo(function PageThumbnail({
         {page.thumbnailUrl ? (
           <img
             src={page.thumbnailUrl}
-            alt={`Page ${page.sourcePageIndex + 1}`}
+            alt={`${t('workspace.page')} ${page.sourcePageIndex + 1}`}
             className="h-full w-full object-contain"
             style={{ transform: `rotate(${page.rotation}deg)` }}
             loading="lazy"
           />
         ) : (
-          <div className="text-xs text-surface-500">Loading…</div>
+          <div className="text-xs text-surface-500">{t('common.loading')}</div>
         )}
 
         {/* Excluded overlay */}
@@ -98,10 +96,10 @@ export const PageThumbnail = memo(function PageThumbnail({
       {/* Info + controls */}
       <div className="flex flex-col gap-1 p-2">
         <p className="truncate text-[10px] text-surface-400">{file?.originalName ?? 'Unknown'}</p>
-        <p className="text-[10px] text-surface-500">Page {page.sourcePageIndex + 1} · {page.rotation}°</p>
+        <p className="text-[10px] text-surface-500">{t('workspace.page')} {page.sourcePageIndex + 1} · {page.rotation}°</p>
 
         <div className="flex items-center gap-1 pt-0.5">
-          <InfoTooltip content="Rotate left">
+          <InfoTooltip content={t('sidebar.undoTooltip')}>
             <button
               onClick={() => rotatePage(page.id, 'ccw')}
               className="rounded p-1 text-surface-400 hover:bg-surface-700 hover:text-surface-200 transition-colors cursor-help"
@@ -109,7 +107,7 @@ export const PageThumbnail = memo(function PageThumbnail({
               <RotateCcw className="h-3 w-3" />
             </button>
           </InfoTooltip>
-          <InfoTooltip content="Rotate right">
+          <InfoTooltip content={t('sidebar.redoTooltip')}>
             <button
               onClick={() => rotatePage(page.id, 'cw')}
               className="rounded p-1 text-surface-400 hover:bg-surface-700 hover:text-surface-200 transition-colors cursor-help"
@@ -118,7 +116,7 @@ export const PageThumbnail = memo(function PageThumbnail({
             </button>
           </InfoTooltip>
           <div className="flex-1" />
-          <InfoTooltip content={page.excluded ? 'Include this page in the final export.' : 'Exclude this page from the final export.'} position="left">
+          <InfoTooltip content={page.excluded ? t('workspace.included') : t('workspace.excluded')} position="left">
             <button
               onClick={() => toggleExclude(page.id)}
               className={`rounded p-1 transition-colors cursor-help ${
@@ -135,3 +133,4 @@ export const PageThumbnail = memo(function PageThumbnail({
     </div>
   );
 });
+

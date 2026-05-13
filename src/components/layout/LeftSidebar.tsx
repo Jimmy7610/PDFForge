@@ -1,7 +1,3 @@
-/* ───────────────────────────────────────────────────────────────
-   PDFForge – Left Sidebar
-   ─────────────────────────────────────────────────────────────── */
-
 import { useState } from 'react';
 import { Hammer, Trash2, Undo2, Redo2, CircleHelp } from 'lucide-react';
 import { usePdfForgeStore } from '../../store/pdfForgeStore';
@@ -10,12 +6,14 @@ import { FileList } from '../pdf/FileList';
 import { ExportPanel } from '../pdf/ExportPanel';
 import { ConfirmDialog } from '../ui/ConfirmDialog';
 import { InfoTooltip } from '../ui/InfoTooltip';
+import { useTranslation } from '../../i18n/useTranslation';
 
 interface LeftSidebarProps {
   onOpenGuide?: () => void;
 }
 
 export function LeftSidebar({ onOpenGuide }: LeftSidebarProps) {
+  const { t } = useTranslation();
   const clearProject = usePdfForgeStore((s) => s.clearProject);
   const undo = usePdfForgeStore((s) => s.undo);
   const redo = usePdfForgeStore((s) => s.redo);
@@ -29,14 +27,14 @@ export function LeftSidebar({ onOpenGuide }: LeftSidebarProps) {
     <div className="flex h-full flex-col">
       {/* Logo */}
       <div className="flex items-center gap-2.5 border-b border-surface-800 px-4 py-4">
-        <InfoTooltip content="PDFForge is your local browser-based PDF workbench." position="bottom">
+        <InfoTooltip content={t('common.credits')} position="bottom">
           <div className="flex items-center gap-2.5 cursor-help">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-600">
               <Hammer className="h-4.5 w-4.5 text-white" />
             </div>
             <div>
               <h1 className="text-base font-bold tracking-tight text-surface-50">PDFForge</h1>
-              <p className="text-[10px] leading-none text-surface-400">Browser PDF Workbench</p>
+              <p className="text-[10px] leading-none text-surface-400">{t('common.credits')}</p>
             </div>
           </div>
         </InfoTooltip>
@@ -45,7 +43,7 @@ export function LeftSidebar({ onOpenGuide }: LeftSidebarProps) {
           <button 
             onClick={onOpenGuide}
             className="ml-auto flex h-8 w-8 items-center justify-center rounded-lg text-surface-400 transition-colors hover:bg-surface-800 hover:text-surface-200"
-            title="Guide / Help"
+            title={t('common.guide')}
           >
             <CircleHelp className="h-5 w-5" />
           </button>
@@ -63,7 +61,7 @@ export function LeftSidebar({ onOpenGuide }: LeftSidebarProps) {
       <div className="border-t border-surface-800 p-3">
         {/* Undo/Redo */}
         <div className="mb-2 flex gap-1.5">
-          <InfoTooltip content="Undo the last supported edit." className="flex-1">
+          <InfoTooltip content={t('sidebar.undoTooltip')} className="flex-1">
             <button
               onClick={undo}
               disabled={!canUndo()}
@@ -71,10 +69,10 @@ export function LeftSidebar({ onOpenGuide }: LeftSidebarProps) {
               id="undo-btn"
             >
               <Undo2 className="h-3.5 w-3.5" />
-              Undo
+              {t('common.undo')}
             </button>
           </InfoTooltip>
-          <InfoTooltip content="Redo the last undone edit." className="flex-1">
+          <InfoTooltip content={t('sidebar.redoTooltip')} className="flex-1">
             <button
               onClick={redo}
               disabled={!canRedo()}
@@ -82,13 +80,13 @@ export function LeftSidebar({ onOpenGuide }: LeftSidebarProps) {
               id="redo-btn"
             >
               <Redo2 className="h-3.5 w-3.5" />
-              Redo
+              {t('common.redo')}
             </button>
           </InfoTooltip>
         </div>
 
         {/* Clear project */}
-        <InfoTooltip content="Remove all loaded files and reset the current workspace." className="w-full block">
+        <InfoTooltip content={t('sidebar.clearTooltip')} className="w-full block">
           <button
             onClick={() => setShowClearConfirm(true)}
             disabled={pages.length === 0}
@@ -96,16 +94,16 @@ export function LeftSidebar({ onOpenGuide }: LeftSidebarProps) {
             id="clear-project-btn"
           >
             <Trash2 className="h-3.5 w-3.5" />
-            Clear Project
+            {t('common.clear')}
           </button>
         </InfoTooltip>
       </div>
 
       <ConfirmDialog
         open={showClearConfirm}
-        title="Clear Project"
-        message="This will remove all uploaded files, pages, and edits. This action cannot be undone."
-        confirmLabel="Clear Everything"
+        title={t('sidebar.clearConfirm.title')}
+        message={t('sidebar.clearConfirm.message')}
+        confirmLabel={t('sidebar.clearConfirm.btn')}
         onConfirm={() => {
           clearProject();
           setShowClearConfirm(false);
@@ -116,3 +114,4 @@ export function LeftSidebar({ onOpenGuide }: LeftSidebarProps) {
     </div>
   );
 }
+

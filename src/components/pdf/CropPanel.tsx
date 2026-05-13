@@ -1,12 +1,10 @@
-/* ───────────────────────────────────────────────────────────────
-   PDFForge – CropPanel
-   ─────────────────────────────────────────────────────────────── */
-
 import { Crop, RotateCcw } from 'lucide-react';
 import { usePdfForgeStore } from '../../store/pdfForgeStore';
 import { InfoTooltip } from '../ui/InfoTooltip';
+import { useTranslation } from '../../i18n/useTranslation';
 
 export function CropPanel() {
+  const { t } = useTranslation();
   const activeTool = usePdfForgeStore((s) => s.activeTool);
   const setActiveTool = usePdfForgeStore((s) => s.setActiveTool);
   const selectedPageId = usePdfForgeStore((s) => s.selectedPageId);
@@ -19,8 +17,8 @@ export function CropPanel() {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <h4 className="text-xs font-semibold uppercase tracking-wider text-surface-400">Crop</h4>
-        <InfoTooltip content="Select an area of the page to keep during export." position="bottom">
+        <h4 className="text-xs font-semibold uppercase tracking-wider text-surface-400">{t('inspector.crop.title')}</h4>
+        <InfoTooltip content={t('inspector.crop.desc')} position="bottom">
           <button
             onClick={() => setActiveTool(isActive ? 'none' : 'crop')}
             disabled={!selectedPageId}
@@ -32,21 +30,21 @@ export function CropPanel() {
             id="toggle-crop-btn"
           >
             <Crop className="h-3 w-3" />
-            {isActive ? 'Drawing…' : 'Crop'}
+            {isActive ? t('inspector.crop.active') : t('inspector.crop.btn')}
           </button>
         </InfoTooltip>
       </div>
 
       {isActive && (
         <p className="text-[11px] text-primary-300">
-          Click and drag on the preview to define a crop area.
+          {t('inspector.crop.desc')}
         </p>
       )}
 
       {page?.crop && (
         <div className="space-y-2">
           <div className="rounded-lg bg-surface-800/60 px-2.5 py-2 text-[11px] text-surface-300">
-            <p>Crop: {page.crop.width.toFixed(0)} × {page.crop.height.toFixed(0)} pt</p>
+            <p>{t('inspector.crop.title')}: {page.crop.width.toFixed(0)} × {page.crop.height.toFixed(0)} pt</p>
             <p className="text-surface-500">at ({page.crop.x.toFixed(0)}, {page.crop.y.toFixed(0)})</p>
           </div>
           <button
@@ -55,10 +53,12 @@ export function CropPanel() {
             id="reset-crop-btn"
           >
             <RotateCcw className="h-3 w-3" />
-            Reset Crop
+            {t('common.redo')} {/* Using redo for Reset? No, let's use a common Reset or just t('inspector.crop.title') */}
+            Reset
           </button>
         </div>
       )}
     </div>
   );
 }
+
